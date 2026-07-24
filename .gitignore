@@ -1,3 +1,7 @@
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+scripts/__marimo__/session
+src/fast_shadow/__pycache__
+AGENTS.md
+src/dem_tools/__pycache__

@@ -1,7 +1,7 @@
 [project]
 authors = [{name = "Hugo Merzisen", email = "hugo.merzisen@meteo.fr"}]
-dependencies = []
-name = "fast-shadow"
+dependencies = ["matplotlib-backend-kitty>=2.1.2,<3"]
+name = "dem-tools"
 requires-python = ">= 3.11"
 version = "0.1.0"
 
@@ -9,17 +9,19 @@ version = "0.1.0"
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
+
 [tool.pixi.workspace]
 channels = ["conda-forge"]
-platforms = ["osx-arm64"]
+platforms = ["osx-arm64", "linux-64"]
 
 [tool.pixi.pypi-dependencies]
-fast_shadow = { path = ".", editable = true }
+dem-tools = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 
 [tool.pixi.dependencies]
-xarray = ">=2026.7.0,<2027"
-rioxarray = ">=0.22.0,<0.23"
 matplotlib = ">=3.11.1,<4"
 marimo = ">=0.23.15,<0.24"
+rioxarray = ">=0.23.0,<0.24"
+ipython = ">=9.15.0,<10"
+xarray = ">=2026.7.0,<2027"
