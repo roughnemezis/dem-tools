@@ -57,18 +57,18 @@ class ShadowIterator():
 
 class VectorisedShadowIterator:
 
-    def __init__(self, dem, sun_elevation):
+    def __init__(self, dem, sun_elevation, name_x="x", name_y="y"):
         """
         aucune diff avec la version non vectorisée!
         """
         self.sun_elevation  = sun_elevation
-        self.dem = dem
-        self.size_x = dem.sizes["x"]
-        self.size_y = dem.sizes["y"]
-        self.diff_dem = dem.shift({'y':1}, fill_value=None) - dem
-        self.shadows = xr.full_like(dem, False, dtype=bool)
+        self.dem = dem.rename({name_x: "x", name_y: "y"})
+        self.size_x = self.dem.sizes["x"]
+        self.size_y = self.dem.sizes["y"]
+        self.diff_dem = self.dem.shift({'y':1}, fill_value=None) - self.dem
+        self.shadows = xr.full_like(self.dem, False, dtype=bool)
         self.peaks_to_explore = (
-                xr.full_like(dem, True, dtype=bool)
+                xr.full_like(self.dem, True, dtype=bool)
                 .where(self.diff_dem/30 <= -1*sun_elevation, False)
                 )
         self.current_iteration = 0
@@ -76,16 +76,10 @@ class VectorisedShadowIterator:
         self.document_step()
 
 
-    # def fast_2d_plot(self,  data:xr.DataArray, ax=None,down = 10):
-    #     if ax is None:
-    #         fig, ax = plt.subplots()
-    #     data.isel(x=slice(None, None,down), y=slice(None, None,down)).plot(ax=ax)
-    #     return ax
 
     @property
     def current_y(self):
         return self.size_y - self.current_iteration - 1
-
 
 
     def iterate(self):
@@ -107,7 +101,6 @@ class VectorisedShadowIterator:
         self.steps.append(
                 self.peaks_to_explore.isel(y=slice(None, self.current_y)).sum(dim="x")
                 )
-
 
 
     def compute(self):
